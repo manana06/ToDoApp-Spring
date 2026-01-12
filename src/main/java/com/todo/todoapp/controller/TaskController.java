@@ -22,44 +22,38 @@ public class TaskController {
         this.userService = userService;
     }
 
-    // 1. Εμφάνιση της λίστας εργασιών (Η κεντρική σελίδα μετά το login)
     @GetMapping("/tasks")
     public String listTasks(Model model, Principal principal, @RequestParam(value = "keyword", required = false) String keyword) {
-        // Βρίσκουμε ποιος χρήστης είναι συνδεδεμένος
         String username = principal.getName();
         User currentUser = userService.findByUsername(username);
 
-        // Βρίσκουμε τα tasks του (με ή χωρίς αναζήτηση)
         List<Task> tasks = taskService.searchTasks(currentUser, keyword);
 
         model.addAttribute("tasks", tasks);
-        model.addAttribute("newTask", new Task()); // Για τη φόρμα νέας εργασίας
+        model.addAttribute("newTask", new Task()); 
         model.addAttribute("username", username);
 
-        return "tasks"; // Θα ανοίξει το tasks.html
+        return "tasks"; 
     }
 
-    // 2. Αποθήκευση νέας εργασίας
     @PostMapping("/tasks")
     public String saveTask(@ModelAttribute("newTask") Task task, Principal principal) {
         String username = principal.getName();
         User currentUser = userService.findByUsername(username);
-
-        task.setUser(currentUser); // Συνδέουμε την εργασία με τον χρήστη
-        task.setStatus("Pending"); // Αρχικά είναι "Σε εκκρεμότητα"
+ 
+        task.setUser(currentUser); 
+        task.setStatus("Pending"); 
 
         taskService.saveTask(task);
-        return "redirect:/tasks"; // Ξαναφορτώνουμε τη σελίδα
+        return "redirect:/tasks"; 
     }
 
-    // 3. Διαγραφή εργασίας
     @GetMapping("/tasks/delete/{id}")
     public String deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return "redirect:/tasks";
     }
 
-    // 4. Αλλαγή κατάστασης (Ολοκληρώθηκε / Εκκρεμεί)
     @GetMapping("/tasks/toggle/{id}")
     public String toggleTaskStatus(@PathVariable Long id) {
         Task task = taskService.getTask(id);
