@@ -18,17 +18,16 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("--- ΕΛΕΓΧΟΣ ΒΑΣΗΣ ΔΕΔΟΜΕΝΩΝ ---");
 
-        // Ελέγχουμε αν υπάρχει ήδη ο χρήστης για να μην βγάλει λάθος
-        if (userService.findByUsername("admin") == null) {
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setPassword("1234"); // Ο κωδικός θα κρυπτογραφηθεί αυτόματα στο Service
-            admin.setRole("ADMIN");
+        if (userService.findByUsername("maria") == null) {
+            User maria = new User();
+            maria.setUsername("maria");
+            maria.setPassword("1234");
+            maria.setRole("MARIA");
 
             userService.saveUser(admin);
-            System.out.println("✅ ΕΠΙΤΥΧΙΑ: Ο χρήστης 'admin' δημιουργήθηκε!");
+            System.out.println("ΕΠΙΤΥΧΙΑ: Ο χρήστης 'maria' δημιουργήθηκε!");
         } else {
-            System.out.println("ℹ️ Ο χρήστης 'admin' υπάρχει ήδη.");
+            System.out.println("Ο χρήστης 'maria' υπάρχει ήδη.");
         }
 
         System.out.println("-------------------------------");
