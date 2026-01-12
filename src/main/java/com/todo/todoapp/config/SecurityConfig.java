@@ -15,24 +15,23 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // 1. Αυτό διορθώνει το κόκκινο σφάλμα στο UserService!
-    // Λέει στο σύστημα πώς να κρυπτογραφεί τους κωδικούς.
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 2. Εδώ ορίζουμε ποιος έχει πρόσβαση πού.
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**").permitAll() // Όλοι βλέπουν αυτά
-                        .anyRequest().authenticated() // Για όλα τα άλλα θέλει login
+                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**").permitAll() 
+                        .anyRequest().authenticated() 
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // Θα φτιάξουμε δική μας σελίδα login
-                        .defaultSuccessUrl("/tasks", true) // Μόλις μπει, πάει στα tasks
+                        .loginPage("/login") 
+                        .defaultSuccessUrl("/tasks", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -43,19 +42,16 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 3. Η "Γέφυρα": Συνδέει το Spring Security με τη Βάση Δεδομένων μας
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username -> {
-            // Ψάχνουμε τον χρήστη στη βάση μας
             com.todo.todoapp.entity.User appUser = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            // Τον μετατρέπουμε σε χρήστη που καταλαβαίνει το Spring Security
             return org.springframework.security.core.userdetails.User
                     .withUsername(appUser.getUsername())
                     .password(appUser.getPassword())
-                    .authorities(appUser.getRole()) // Βάζουμε τον ρόλο (ADMIN/MEMBER)
+                    .authorities(appUser.getRole())
                     .build();
         };
     }
