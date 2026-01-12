@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Εγγραφή - ToDo App</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        .link { text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align:center;">Εγγραφή</h2>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <label>Username</label>
+        <input type="text" th:field="*{username}" required placeholder="Διάλεξε όνομα χρήστη"/>
+
+        <label>Password</label>
+        <input type="password" th:field="*{password}" required placeholder="Διάλεξε κωδικό"/>
+
+        <button type="submit">Εγγραφή</button>
+    </form>
+
+    <div class="link">
+        <a th:href="@{/login}">Έχεις λογαριασμό; Σύνδεση</a>
+    </div>
+</div>
+
+</body>
+</html>

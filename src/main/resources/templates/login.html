@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Σύνδεση - ToDo App</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0069d9; }
+        .error { color: red; text-align: center; }
+        .success { color: green; text-align: center; }
+        .link { text-align: center; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align:center;">Σύνδεση</h2>
+
+    <div th:if="${param.error}" class="error">Λάθος όνομα ή κωδικός!</div>
+    <div th:if="${param.logout}" class="success">Αποσυνδέθηκες επιτυχώς.</div>
+    <div th:if="${param.success}" class="success">Η εγγραφή πέτυχε! Συνδέσου.</div>
+
+    <form th:action="@{/login}" method="post">
+        <label>Username</label>
+        <input type="text" name="username" required placeholder="Όνομα χρήστη"/>
+
+        <label>Password</label>
+        <input type="password" name="password" required placeholder="Κωδικός"/>
+
+        <button type="submit">Είσοδος</button>
+    </form>
+
+    <div class="link">
+        <a th:href="@{/register}">Δεν έχεις λογαριασμό; Εγγραφή</a>
+    </div>
+</div>
+
+</body>
+</html>

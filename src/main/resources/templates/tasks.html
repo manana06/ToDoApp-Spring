@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Οι Εργασίες μου</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
+        .logout-btn { background: #dc3545; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; }
+
+        /* Φόρμα Προσθήκης */
+        .add-form { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; gap: 10px; }
+        input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .btn-add { background: #28a745; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px;}
+
+        /* Πίνακας */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #007bff; color: white; }
+        .status-completed { color: green; font-weight: bold; text-decoration: line-through; }
+        .status-pending { color: orange; font-weight: bold; }
+
+        .btn-action { text-decoration: none; padding: 5px 10px; border-radius: 3px; font-size: 0.9em; margin-right: 5px; }
+        .btn-delete { background: #dc3545; color: white; }
+        .btn-check { background: #17a2b8; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Λίστα Εργασιών: <span th:text="${username}">User</span></h2>
+        <a th:href="@{/logout}" class="logout-btn">Αποσύνδεση</a>
+    </div>
+
+    <form th:action="@{/tasks}" method="get" style="margin: 20px 0;">
+        <input type="text" name="keyword" placeholder="Αναζήτηση εργασίας..." style="width: 70%;">
+        <button type="submit" class="btn-add" style="background-color: #007bff;">Αναζήτηση</button>
+        <a th:href="@{/tasks}" style="margin-left: 10px;">Καθαρισμός</a>
+    </form>
+
+    <form th:action="@{/tasks}" th:object="${newTask}" method="post" class="add-form">
+        <input type="text" th:field="*{title}" placeholder="Τίτλος εργασίας" required style="flex: 2;">
+        <input type="text" th:field="*{description}" placeholder="Περιγραφή" style="flex: 2;">
+        <input type="date" th:field="*{dueDate}" required>
+        <select th:field="*{priority}">
+            <option value="Low">Χαμηλή</option>
+            <option value="Medium">Μεσαία</option>
+            <option value="High">Υψηλή</option>
+        </select>
+        <button type="submit" class="btn-add">Προσθήκη</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Τίτλος</th>
+            <th>Προθεσμία</th>
+            <th>Προτεραιότητα</th>
+            <th>Κατάσταση</th>
+            <th>Ενέργειες</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}" th:class="${task.status == 'Completed' ? 'status-completed' : ''}"></td>
+            <td th:text="${task.dueDate}"></td>
+            <td th:text="${task.priority}"></td>
+            <td>
+                <span th:if="${task.status == 'Pending'}" class="status-pending">Εκκρεμεί</span>
+                <span th:if="${task.status == 'Completed'}" style="color:green;">Ολοκληρώθηκε</span>
+            </td>
+            <td>
+                <a th:href="@{/tasks/toggle/{id}(id=${task.id})}" class="btn-action btn-check">✔</a>
+                <a th:href="@{/tasks/delete/{id}(id=${task.id})}" class="btn-action btn-delete" onclick="return confirm('Σίγουρα θέλεις διαγραφή;')">🗑</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${tasks.empty}" style="text-align: center; margin-top: 20px; color: gray;">
+        Δεν υπάρχουν εργασίες. Πρόσθεσε μία!
+    </div>
+</div>
+
+</body>
+</html>
