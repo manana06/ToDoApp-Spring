@@ -13,12 +13,10 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Θα μας βοηθήσει να κρυπτογραφήσουμε τον κωδικό
+    private PasswordEncoder passwordEncoder; 
 
     public void saveUser(User user) {
-        // Πριν αποθηκεύσουμε, κρυπτογραφούμε τον κωδικό για ασφάλεια
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        // Αν δεν έχει ρόλο, του βάζουμε "ROLE_MEMBER"
         if (user.getRole() == null) {
             user.setRole("ROLE_MEMBER");
         }
