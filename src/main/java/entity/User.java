@@ -17,8 +17,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String role; // "ADMIN" or "MEMBER"
-
+    private String role; 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Task> tasks;
 
