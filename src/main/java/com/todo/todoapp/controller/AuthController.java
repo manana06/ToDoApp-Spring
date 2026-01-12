@@ -17,27 +17,27 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // Δείχνει τη σελίδα Login
+    // 1. Δείξε τη σελίδα Login
     @GetMapping("/login")
     public String login() {
         return "login";
     }
 
-    // Δείχνει τη σελίδα Εγγραφής
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "register";
     }
 
-    // Επεξεργάζεται την Εγγραφή όταν πατάς το κουμπί
+
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user) {
-        // Ελέγχουμε αν υπάρχει ήδη ο χρήστης
+
         if (userService.findByUsername(user.getUsername()) != null) {
-            return "redirect:/register?error"; // Αν υπάρχει, ξαναπάμε στο register με error
+            return "redirect:/register?error";
         }
+
         userService.saveUser(user);
-        return "redirect:/login?success"; // Αν όλα καλά, πάμε στο login
+        return "redirect:/login";
     }
 }

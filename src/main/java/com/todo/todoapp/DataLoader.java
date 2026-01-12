@@ -1,36 +1,35 @@
 package com.todo.todoapp;
 
 import com.todo.todoapp.entity.User;
-import com.todo.todoapp.service.UserService;
+import com.todo.todoapp.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataLoader implements CommandLineRunner {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataLoader(UserService userService) {
-        this.userService = userService;
+    public DataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("--- ΕΛΕΓΧΟΣ ΒΑΣΗΣ ΔΕΔΟΜΕΝΩΝ ---");
+        if (userRepository.findByUsername("maria").isEmpty()) {
 
-        // Ελέγχουμε αν υπάρχει ήδη ο χρήστης για να μην βγάλει λάθος
-        if (userService.findByUsername("admin") == null) {
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setPassword("1234"); // Ο κωδικός θα κρυπτογραφηθεί αυτόματα στο Service
-            admin.setRole("ADMIN");
+            User user = new User();
+            user.setUsername("maria");
+            user.setPassword(passwordEncoder.encode("password"));
+            user.setRole("USER");
 
-            userService.saveUser(admin);
-            System.out.println("✅ ΕΠΙΤΥΧΙΑ: Ο χρήστης 'admin' δημιουργήθηκε!");
+            userRepository.save(user);
+            System.out.println("--- Ο χρήστης 'maria' δημιουργήθηκε επιτυχώς! ---");
         } else {
-            System.out.println("ℹ️ Ο χρήστης 'admin' υπάρχει ήδη.");
+            System.out.println("--- Ο χρήστης 'maria' υπάρχει ήδη. ---");
         }
-
-        System.out.println("-------------------------------");
     }
 }
